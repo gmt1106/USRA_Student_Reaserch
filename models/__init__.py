@@ -56,6 +56,9 @@ class ResNet(nn.Module):
         # conv block with the output channel,  c = 3
         self.model.add_module("Conv_Block_2", ConvBlock(in_channels_dim, 3))
 
+        if torch.cuda.is_available():
+            self.model = self.model.cuda()
+
     def forward(self, input):
 
         return self.model(input)
