@@ -12,17 +12,17 @@ class ConvBlock(nn.Module):
 
         self.model = nn.Sequential()
 
-        for i in range(3):
-            self.model.add_module(f"BatchNorm2d_ConvBlock_{i}", nn.BatchNorm2d(num_input_channels))
-            self.model.add_module(f"Conv2d_ConvBlock_{i}", nn.Conv2d(num_input_channels, num_output_channels, 1, 1, padding=0))
-            self.act_fun()
-            num_input_channels = num_output_channels
-
         # this is for the identity to match the channel size 
         self.identity_downsample = nn.Sequential(
             nn.Conv2d(num_input_channels, num_output_channels, 1, 1, padding=0),
             nn.BatchNorm2d(num_output_channels),
         )
+
+        for i in range(3):
+            self.model.add_module(f"BatchNorm2d_ConvBlock_{i}", nn.BatchNorm2d(num_input_channels))
+            self.model.add_module(f"Conv2d_ConvBlock_{i}", nn.Conv2d(num_input_channels, num_output_channels, 1, 1, padding=0))
+            self.act_fun()
+            num_input_channels = num_output_channels
 
     def forward(self, input):
 
