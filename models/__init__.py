@@ -4,7 +4,7 @@ import torch.nn as nn
 
 class ConvBlock(nn.Module):
 
-    def __init__(self, num_input_channels, num_output_channels, kernel_size=3, act_fun=nn.ReLU):
+    def __init__(self, num_input_channels, num_output_channels, act_fun=nn.ReLU):
 
         super(ConvBlock, self).__init__()
 
@@ -12,18 +12,11 @@ class ConvBlock(nn.Module):
 
         self.model = nn.Sequential()
 
-        self.model.add_module("BatchNorm2d_ConvBlock_1", nn.BatchNorm2d(num_input_channels))
-        self.model.add_module("Conv2d_ConvBlock_1", nn.Conv2d(num_input_channels, num_output_channels, 1, 1, padding=0))
-        self.act_fun()
-
-        self.model.add_module("BatchNorm2d_ConvBlock_2", nn.BatchNorm2d(num_output_channels))
-        to_pad = kernel_size // 2
-        self.model.add_module("Conv2d_ConvBlock_2", nn.Conv2d(num_output_channels, num_output_channels, kernel_size, 1, to_pad))
-        self.act_fun()
-
-        self.model.add_module("BatchNorm2d_ConvBlock_3", nn.BatchNorm2d(num_output_channels))
-        self.model.add_module("Conv2d_ConvBlock_3", nn.Conv2d(num_output_channels, num_output_channels, 1, 1, padding=0))
-        self.act_fun()
+        for i in range(3):
+            self.model.add_module(f"BatchNorm2d_ConvBlock_{i}", nn.BatchNorm2d(num_input_channels))
+            self.model.add_module(f"Conv2d_ConvBlock_{i}", nn.Conv2d(num_input_channels, num_output_channels, 1, 1, padding=0))
+            self.act_fun()
+            num_input_channels = num_output_channels
 
         # this is for the identity to match the channel size 
         self.identity_downsample = nn.Sequential(
@@ -40,7 +33,7 @@ class ConvBlock(nn.Module):
 
 class ResNet(nn.Module):
 
-    def __init__(self, kernel_size=3, act_fun=nn.ReLU):
+    def __init__(self, act_fun=nn.ReLU):
 
         """
         Arguments:
@@ -57,9 +50,7 @@ class ResNet(nn.Module):
 
         for i in range(2):
             # conv block with the output channel, c = 32
-            self.model.add_module(f"Conv_Block_{i}", ConvBlock(in_channels_dim, out_channels_dim, kernel_size = kernel_size, act_fun = act_fun))
-            # upsample 2d with bilinear interpolation to double w and h
-            self.model.add_module(f"Upsample_{i}", nn.Upsample(scale_factor=2, mode='bilinear'))
+            self.model.add_module(f"Conv_Block_{i}", ConvBlock(in_channels_dim, out_channels_dim, act_fun = act_fun))
             in_channels_dim = out_channels_dim
         
         # conv block with the output channel,  c = 3
