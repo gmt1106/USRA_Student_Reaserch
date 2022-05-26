@@ -1,68 +1,5 @@
-from turtle import forward
 import torch
 import torch.nn as nn
-
-class ConvBlock(nn.Module):
-
-    def __init__(self, num_input_channels, num_output_channels, act_fun=nn.ReLU):
-
-        super(ConvBlock, self).__init__()
-
-        self.act_fun = act_fun
-
-        self.model = nn.Sequential()
-
-        # this is for the identity to match the channel size 
-        self.identity_downsample = nn.Sequential(
-            nn.Conv2d(num_input_channels, num_output_channels, 1, 1, padding=0),
-            nn.BatchNorm2d(num_output_channels),
-        )
-
-        for i in range(3):
-            self.model.add_module(f"BatchNorm2d_ConvBlock_{i}", nn.BatchNorm2d(num_input_channels))
-            self.model.add_module(f"Conv2d_ConvBlock_{i}", nn.Conv2d(num_input_channels, num_output_channels, 1, 1, padding=0))
-            self.act_fun()
-            num_input_channels = num_output_channels
-
-    def forward(self, input):
-
-        identity = self.identity_downsample(input)
-        x_out = self.model(input) + identity
-        return x_out
-
-
-class ResNet(nn.Module):
-
-    def __init__(self, act_fun=nn.ReLU):
-
-        """
-        Arguments:
-            input_width: original image width(W) // 4
-            input_height: original image height(H) // 4
-        """
-
-        super(ResNet, self).__init__()
-
-        self.model = nn.Sequential()
-
-        in_channels_dim = 3
-        out_channels_dim = 32
-
-        for i in range(2):
-            # conv block with the output channel, c = 32
-            self.model.add_module(f"Conv_Block_{i}", ConvBlock(in_channels_dim, out_channels_dim, act_fun = act_fun))
-            in_channels_dim = out_channels_dim
-        
-        # conv block with the output channel,  c = 3
-        self.model.add_module("Conv_Block_2", ConvBlock(in_channels_dim, 3))
-
-        if torch.cuda.is_available():
-            self.model = self.model.cuda()
-
-    def forward(self, input):
-
-        return self.model(input)
-
 
 class Concat(nn.Module):
 
@@ -86,7 +23,7 @@ class Concat(nn.Module):
 
         return len(self._modules)
 
-class Net(nn.Module):
+class DeepImagePriorNet(nn.Module):
 
     def __init__(self, num_input_channels=2, num_output_channels=3, 
         channels_down=[16, 32, 64, 128, 128], channels_up=[16, 32, 64, 128, 128], channels_skip=[4, 4, 4, 4, 4], 
@@ -102,7 +39,7 @@ class Net(nn.Module):
             upsample_mode (string): 'nearest|bilinear' (default: 'nearest')
             downsample_mode (string): 'stride|avg|max|lanczos2' (default: 'stride')
         """
-        super(Net, self).__init__()
+        super(DeepImagePriorNet, self).__init__()
 
         assert len(channels_down) == len(channels_up) == len(channels_skip)
 
