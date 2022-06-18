@@ -12,10 +12,8 @@ def make_jobs_script(params, dir_jobs):
 
     header = "#!/bin/bash" + "\n"
     header += "module load cuda scipy-stack python/3" + "\n"
-    # header += "eval \"$(conda shell.bash hook)\"" + "\n"
-    # header += "conda activate pcd" + "\n"
-
-    header += "cd /home/$USER/scratch/juho-usra/train" + "\n"
+    header += "source /home/$USER/juho-usra/bin/activate" + "\n"
+    header += "cd /home/$USER/scratch/$USER/juho-usra" + "\n"
     num_jobs = 0
     for param in params:
         values = list(param.values())
