@@ -23,7 +23,7 @@ def make_jobs_script(params, dir_jobs):
             for key, valuei in zip(keys, com):
                 hp += [f"--{key}={valuei}"]
             hp += [f"--case_num={num_jobs}"]
-            command = "python3 main.py " + " ".join(hp)
+            command = "srun python3 main.py " + " ".join(hp)
             fn = f"jobs{num_jobs}.sh"
             fn = os.path.join(dir_jobs, fn)
             with open(fn, "w") as f:
