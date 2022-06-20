@@ -22,7 +22,7 @@ def make_jobs_script(params, dir_jobs):
             hp = []
             for key, valuei in zip(keys, com):
                 hp += [f"--{key}={valuei}"]
-            
+            hp += [f"--case_num={num_jobs}"]
             command = "python3 main.py " + " ".join(hp)
             fn = f"jobs{num_jobs}.sh"
             fn = os.path.join(dir_jobs, fn)
@@ -45,8 +45,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--function', type=str,
-                       default='d',
-                       help="d for denoising and sr for super_resolution")
+                       default='b',
+                       help="d for denoising and sr for super_resolution and b for both")
     parser.add_argument('--w0_lowerbound', type=float,
                        default=30.,
                        help="lowerbound of the w0 parameter for Siren.")
@@ -74,9 +74,15 @@ if __name__ == "__main__":
     learning_rate_upperbound = args.learning_rate_upperbound
     learning_rate_scale_factor = args.learning_rate_scale_factor
 
-    param = {
-        "function": [function_name]
-    }
+    param = {}
+
+    function = []
+    if function_name == 'b':
+        function.append("d")
+        function.append("sr")
+    else:
+        function.append(function_name)
+    param.update({"function": function})
 
     w0 = []
     while w0_lowerbound < w0_upperbound:

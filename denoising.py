@@ -13,7 +13,7 @@ from models.siren_pytorch import SirenNet
 import lpips
 
 # Train for SIREN
-def sirenTrain(w0, leanrning_rate):
+def sirenTrain(w0, leanrning_rate, case_num):
 
     dtype = None
     if torch.cuda.is_available():
@@ -83,7 +83,7 @@ def sirenTrain(w0, leanrning_rate):
     loss = nn.MSELoss().type(dtype) 
 
     # tensorboard log directory 
-    log_dir = 'logs/experiment/Siren/denoising'
+    log_dir = 'logs/experiment/Siren/denoising/' + case_num
 
     # Create summary writer
     writer = SummaryWriter(log_dir)
