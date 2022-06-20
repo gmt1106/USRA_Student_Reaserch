@@ -37,9 +37,9 @@ if __name__ == "__main__":
 
     ###### how to run this program ########
 
-    # python main.py --function 'd or sr' --w0_lowerbound 'w0 parameter lowerbound in float' --w0_upperbound 'w0 parameter upperbound in float'
-    # --w0_step 'w0 step' --learning_rate_lowerbound 'learning rate lowerbound in float' --learning_rate_upperbound 'learning rate upperbound in float'
-    # --learning_rate_step 'learning rate step'
+    # python3 compute_canada_make_script.py --function=<d or sr> --w0_lowerbound=<w0 parameter lowerbound in float> --w0_upperbound=<w0 parameter upperbound in float>
+    # --w0_scale_factor=<w0 scale factor in float> --learning_rate_lowerbound=<learning rate lowerbound in float> --learning_rate_upperbound=<learning rate upperbound in float>
+    # --learning_rate_scale_factor=<learning rate scale factor infloat>
 
     #######################################
 
@@ -53,43 +53,41 @@ if __name__ == "__main__":
     parser.add_argument('--w0_upperbound', type=float,
                        default=30.,
                        help="upperbound of the w0 parameter for Siren.")
-    parser.add_argument('--w0_step', type=float,
+    parser.add_argument('--w0_scale_factor', type=float,
                        default=30.,
-                       help="step of the w0 parameter for Siren.")
+                       help="scale factor of the w0 parameter for Siren.")
     parser.add_argument('--learning_rate_lowerbound', type=float,
                        default=0.01,
                        help="lowerbound of the learning rate for Siren") 
     parser.add_argument('--learning_rate_upperbound', type=float,
                        default=0.01,
                        help="upperbound of the learning rate for Siren")   
-    parser.add_argument('--learning_rate_step', type=float,
+    parser.add_argument('--learning_rate_scale_factor', type=float,
                        default=0.01,
-                       help="step of the learning rate for Siren") 
+                       help="scale factor of the learning rate for Siren") 
     args = parser.parse_args()
     function_name = args.function
     w0_lowerbound = args.w0_lowerbound
     w0_upperbound = args.w0_upperbound
-    w0_step = args.w0_step
+    w0_scale_factor = args.w0_scale_factor
     learning_rate_lowerbound = args.learning_rate_lowerbound
     learning_rate_upperbound = args.learning_rate_upperbound
-    learning_rate_step = args.learning_rate_step
+    learning_rate_scale_factor = args.learning_rate_scale_factor
 
     param = {
-        "function": [function_name],
-        "w0": [1],
-        "learning_rate": ["uni-180-0.2"],
+        "function": [function_name]
     }
 
     w0 = []
     while w0_lowerbound < w0_upperbound:
         w0.append(w0_lowerbound)
-        w0_lowerbound = w0_lowerbound + w0_step
+        w0_lowerbound *= w0_scale_factor
     param.update({"w0": w0})
 
     learning_rate = []
     while learning_rate_lowerbound < learning_rate_upperbound:
         learning_rate.append(learning_rate_lowerbound)
-        learning_rate_lowerbound = learning_rate_lowerbound + learning_rate_step
+        learning_rate_lowerbound *= learning_rate_scale_factor
     param.update({"learning_rate": learning_rate})
 
     params.append(param)

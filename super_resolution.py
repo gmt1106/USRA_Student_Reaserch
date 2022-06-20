@@ -13,8 +13,6 @@ from models import *
 from models.siren_pytorch import SirenNet
 
 
-print("done")
-
 # Train for SIREN
 def sirenTrain(w0, leanrning_rate):
 
