@@ -69,7 +69,7 @@ def sirenTrain(w0, leanrning_rate, case_num):
 
 
     ############## SIREN train ##############
-    num_iter = 5000
+    num_iter = 1000
     exp_weight = 0.99
     out_avg = None
     img_noisy = torch.from_numpy(img_noisy_np)[None, :].type(dtype)
