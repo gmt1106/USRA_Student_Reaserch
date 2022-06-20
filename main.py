@@ -3,7 +3,7 @@ from denoising import sirenTrain as denoising_sirenTrain
 from super_resolution import sirenTrain as super_resolution_sirenTrain
 
 
-def main(function_name, w0, leanrning_rate):
+def main(function_name, w0, leanrning_rate, case_num):
     """The main function."""
 
     if function_name == 'd':
@@ -15,7 +15,8 @@ if __name__ == "__main__":
 
     ###### how to run this program ########
 
-    # python main.py --function 'd or sr' --w0 'w0 parameters in float' --learning_rate 'learning rate in float'
+    # python main.py --function=<d or sr> --w0=<w0 parameters in float> --learning_rate=<learning rate in float> 
+    # --case_num=<compute canada script case number>
 
     #######################################
 
