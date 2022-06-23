@@ -8,9 +8,9 @@ import os
 from skimage.metrics import peak_signal_noise_ratio
 # use tensorboard with pytorch
 from torch.utils.tensorboard import SummaryWriter
-import lpips
 from models import *
 from models.siren_pytorch import SirenNet
+import lpips
 
 
 # Train for SIREN
@@ -72,7 +72,7 @@ def sirenTrain(w0, leanrning_rate, case_num):
 
 
     ############## SIREN train ##############
-    num_iter = 900
+    num_iter = 1001
     img_LR = torch.from_numpy(img_LR_np)[None, :].type(dtype)
     img_HR = torch.from_numpy(img_HR_np)[None, :].type(dtype)
 
@@ -119,7 +119,7 @@ def sirenTrain(w0, leanrning_rate, case_num):
         optimizer.zero_grad()
 
         # Save the results
-        if i % 25 == 0:
+        if i % 50 == 0:
             # Write output image to tensorboard, using keywords `image_output`
             #cliping 
             imageOutput = torch.clamp(out_HR, min=0., max=1.)

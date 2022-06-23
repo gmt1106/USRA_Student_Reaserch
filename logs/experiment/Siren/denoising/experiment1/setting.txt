@@ -1,0 +1,5 @@
+num_iter = 1000
+w0 = [1, 5, 25, 125] scale factor = 5
+learning_rate = [0.001, 0.01] scale factor = 10
+
+All result was bad. Try to fix the w0 to be really close to 30.0
