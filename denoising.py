@@ -13,7 +13,7 @@ from models.siren_pytorch import SirenNet
 import lpips
 
 # Train for SIREN
-def sirenTrain(w0, leanrning_rate):
+def sirenTrain(w0, leanrning_rate, case_num):
 
     dtype = None
     if torch.cuda.is_available():
@@ -44,7 +44,7 @@ def sirenTrain(w0, leanrning_rate):
     img_orig_np = img_orig_np.transpose(2,0,1)
     img_orig_np = img_orig_np.astype(np.float32) / 255.
     # noisy
-    img_noisy_np = np.clip(img_orig_np + np.random.normal(scale=sigma, size=img_orig_np.shape), 0, 1).astype(np.float32)
+    img_noisy_np = np.clip(img_orig_np + np.random.normal(scale=sigma_, size=img_orig_np.shape), 0, 1).astype(np.float32)
     img_noisy_pil = np.clip(img_noisy_np*255,0,255).astype(np.uint8)
     img_noisy_pil = img_noisy_pil.transpose(1, 2, 0)
     img_noisy_pil = Image.fromarray(img_noisy_pil)
@@ -69,7 +69,7 @@ def sirenTrain(w0, leanrning_rate):
 
 
     ############## SIREN train ##############
-    num_iter = 5000
+    num_iter = 2001
     exp_weight = 0.99
     out_avg = None
     img_noisy = torch.from_numpy(img_noisy_np)[None, :].type(dtype)
@@ -83,7 +83,7 @@ def sirenTrain(w0, leanrning_rate):
     loss = nn.MSELoss().type(dtype) 
 
     # tensorboard log directory 
-    log_dir = 'logs/experiment/Siren/denoising'
+    log_dir = 'logs/experiment/Siren/denoising/' + case_num
 
     # Create summary writer
     writer = SummaryWriter(log_dir)
@@ -121,7 +121,7 @@ def sirenTrain(w0, leanrning_rate):
         optimizer.zero_grad()
 
         # Save the results
-        if i % 25 == 0:
+        if i % 50 == 0:
              # Write output image to tensorboard, using keywords `image_output`
             writer.add_image("image_output", out_orig, global_step=i, dataformats='NCHW')
             # Write loss to tensorboard, using keywords `loss`

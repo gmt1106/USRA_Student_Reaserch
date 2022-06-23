@@ -8,15 +8,13 @@ import os
 from skimage.metrics import peak_signal_noise_ratio
 # use tensorboard with pytorch
 from torch.utils.tensorboard import SummaryWriter
-import lpips
 from models import *
 from models.siren_pytorch import SirenNet
+import lpips
 
-
-print("done")
 
 # Train for SIREN
-def sirenTrain(w0, leanrning_rate):
+def sirenTrain(w0, leanrning_rate, case_num):
 
     dtype = None
     if torch.cuda.is_available():
@@ -74,7 +72,7 @@ def sirenTrain(w0, leanrning_rate):
 
 
     ############## SIREN train ##############
-    num_iter = 900
+    num_iter = 1001
     img_LR = torch.from_numpy(img_LR_np)[None, :].type(dtype)
     img_HR = torch.from_numpy(img_HR_np)[None, :].type(dtype)
 
@@ -86,7 +84,7 @@ def sirenTrain(w0, leanrning_rate):
     loss = nn.MSELoss().type(dtype) 
 
     # tensorboard log directory 
-    log_dir = './logs/experiment/Siren/super_resolution'
+    log_dir = './logs/experiment/Siren/super_resolution/' + case_num
 
     # Create summary writer
     writer = SummaryWriter(log_dir)
@@ -106,7 +104,7 @@ def sirenTrain(w0, leanrning_rate):
         out_HR = rearrange(out_HR, '(h w) c -> () c h w', h = net_input_height, w = net_input_width)
 
         # Downsampling
-        out_LR = nn.functional.interpolate(out_HR, scale_factor=1/factor, mode="bilinear", antialias=True)
+        out_LR = nn.functional.interpolate(out_HR, scale_factor=1/factor, mode="bilinear")  #, antialias=True)
 
         # Compute the loss 
         total_loss = loss(out_LR, img_LR)
@@ -121,7 +119,7 @@ def sirenTrain(w0, leanrning_rate):
         optimizer.zero_grad()
 
         # Save the results
-        if i % 25 == 0:
+        if i % 50 == 0:
             # Write output image to tensorboard, using keywords `image_output`
             #cliping 
             imageOutput = torch.clamp(out_HR, min=0., max=1.)

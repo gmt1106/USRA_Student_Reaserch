@@ -1,0 +1,5 @@
+num_iter = 5000
+--w0=25.0 --learning_rate=0.001 --case_num=12
+--w0=25.0 --learning_rate=0.01 --case_num=13
+
+But the resaults are not as good as deep image prior.
