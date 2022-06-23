@@ -1,0 +1,8 @@
+num_iter = 900
+w0 = [1, 5, 25, 125] scale factor = 5
+learning_rate = [0.001, 0.01] scale factor = 10
+
+Best when 
+--w0=25.0 --learning_rate=0.001 --case_num=12
+--w0=25.0 --learning_rate=0.01 --case_num=13
+Try to rerun them with little larger num_iter.

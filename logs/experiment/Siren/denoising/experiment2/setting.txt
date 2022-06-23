@@ -1,0 +1,19 @@
+num_iter = 1000
+w0 = [28, 29, 30, 31, 32]
+learning_rate = [0.001, 0.01, 0.1]
+
+Very bad ouputs(just a gray colored image) This is when the learning rate is 0.1
+srun python3 main.py --function=d --w0=32.0 --learning_rate=0.1 --case_num=14
+srun python3 main.py --function=d --w0=31.0 --learning_rate=0.1 --case_num=11
+srun python3 main.py --function=d --w0=30.0 --learning_rate=0.1 --case_num=8
+srun python3 main.py --function=d --w0=29.0 --learning_rate=0.1 --case_num=5
+srun python3 main.py --function=d --w0=28.0 --learning_rate=0.1 --case_num=2
+
+Good results came out when the learning rate is 0.01
+
+The best result
+srun python3 main.py --function=d --w0=30.0 --learning_rate=0.01 --case_num=7
+srun python3 main.py --function=d --w0=31.0 --learning_rate=0.01 --case_num=10
+
+
+But the best results still have some noises. 
